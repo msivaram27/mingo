@@ -1,0 +1,9 @@
+<h2>Reviews for {{ recipe.name }}</h2>
+{% for review in reviews %}
+    <div>
+        <strong>{{ review.user }}:</strong>
+        <p>Rating: {{ review.rating }} stars</p>
+        <p>{{ review.comment }}</p>
+        <p><small>Posted on {{ review.created_at }}</small></p>
+    </div>
+{% endfor %}

@@ -1,0 +1,59 @@
+/* Add background color to the entire page */
+body {
+    background-color: #f0f8ff; /* Light blue background */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Center the form container and give it some padding and styling */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #ffffff; /* White background for the form container */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for form container */
+    border-radius: 10px;
+}
+
+/* Style for the header */
+h1 {
+    text-align: center;
+    color: #333333; /* Dark grey for the header text */
+}
+
+/* Style individual form fields */
+input[type="text"], input[type="url"], input[type="number"], textarea, input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 2px solid #ccc; /* Border color */
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    font-size: 16px;
+}
+
+/* Add hover effect for form fields */
+input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, textarea:focus {
+    border-color: #5dade2; /* Light blue border when focused */
+    outline: none; /* Remove default focus outline */
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    width: 100%;
+    background-color: #28a745; /* Green background for the button */
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Add hover effect for the submit button */
+button[type="submit"]:hover {
+    background-color: #218838; /* Darker green on hover */
+}

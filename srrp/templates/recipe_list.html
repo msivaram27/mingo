@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe List</title>
+    <style>
+        /* Set a background color for the entire page */
+        body {
+            background-color: #f0f8ff; /* Light blue background */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style for the main container (recipe list) */
+        .recipe-list {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Grid layout for recipe items */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* Style for each recipe item */
+        .recipe-item {
+            width: 100%;
+            height: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Style for the recipe images */
+        .recipe-item img {
+            width: 100%;
+            height: 200px; /* Fit the image within the box */
+            object-fit: cover; /* Maintain aspect ratio and cover the space */
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Style for the recipe content */
+        .recipe-content {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Style for the recipe names */
+        .recipe-content h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        /* Style for the view button */
+        .view-button {
+            text-decoration: none;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* Hover effect for the view button */
+        .view-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Style for the search form */
+        .search-form {
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px); /* Adjust width to fit the container */
+        }
+
+        .search-form input[type="submit"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Style for star rating display */
+        .star-rating {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: gold;
+            font-size: 20px;
+        }
+
+        .star.empty {
+            color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #333;">Recipe List</h1>
+
+    <!-- Search form -->
+    <div class="recipe-list">
+        <form class="search-form" method="get" action="{% url 'recipe_list' %}">
+            <input type="text" name="q" placeholder="Search by recipe name" value="{{ query }}">
+            <input type="submit" value="Search">
+        </form>
+
+        <!-- Recipe list display -->
+        <div class="recipe-grid">
+            {% for recipe in recipes %}
+            <div class="recipe-item">
+                <!-- Display the image -->
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+
+                <!-- Display recipe details (name, star rating, view button) -->
+                <div class="recipe-content">
+                    <h3>{{ recipe.name }}</h3>
+
+                    <!-- Star rating display -->
+                    <div class="star-rating" data-recipe-id="{{ recipe.id }}">
+                        {% for star in "12345" %}
+                            {% if star|add:0 <= recipe.rating %}
+                                <span class="star" data-value="{{ star }}">★</span>
+                            {% else %}
+                                <span class="star empty" data-value="{{ star }}">★</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <!-- View button linking to recipe details -->
+                    <a class="view-button" href="{% url 'recipe_detail' recipe.id %}">View Recipe</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No recipes found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.star-rating').forEach(rating => {
+            rating.addEventListener('click', event => {
+                const stars = event.currentTarget.querySelectorAll('.star');
+                let ratingValue = 0;
+
+                stars.forEach(star => {
+                    if (star === event.target || star.previousElementSibling === event.target) {
+                        ratingValue = star.dataset.value;
+                        return false; // break loop
+                    }
+                });
+
+                // Send the rating to the server
+                const recipeId = rating.dataset.recipeId;
+                fetch(`/rate-recipe/${recipeId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}' // CSRF token for security
+                    },
+                    body: JSON.stringify({ rating: ratingValue })
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          alert('Rating submitted successfully!');
+                      } else {
+                          alert('Error: ' + data.error);
+                      }
+                  });
+
+                // Update the visual representation of stars
+                stars.forEach(star => {
+                    if (star.dataset.value <= ratingValue) {
+                        star.classList.remove('empty');
+                    } else {
+                        star.classList.add('empty');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!-- review_list.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reviews for {{ recipe.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Link to your CSS if you have it -->
+</head>
+<body>
+    <h1>Reviews for {{ recipe.name }}</h1>
+    <div class="reviews">
+        {% for review in reviews %}
+            <div class="review">
+                <p><strong>Rating:</strong> {{ review.rating }} / 5</p>
+                <p>{{ review.content }}</p>
+                <p><em>Posted on: {{ review.created_at|date:"F j, Y, g:i a" }}</em></p>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+    <a href="{% url 'recipe_detail' recipe.id %}" class="button">Back to Recipe</a>
+</body>
+</html>

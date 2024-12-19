@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - YouCook</title>
+    <style>
+        /* Reset some basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #FF8C00; /* Thick solid orange */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow for a bold effect */
+            z-index: 1000;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        /* Navbar background change when scrolled */
+        .navbar.scrolled {
+            background-color: #FF7F00; /* Slightly darker orange when scrolled */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); /* Stronger shadow when scrolled */
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Hover effect for the navbar buttons */
+        .navbar a::after {
+            background-color: yellow;
+            border-radius: 3rem;
+            content: '';
+            display: block;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-100%, 0) rotate(10deg);
+            transform-origin: top left;
+            transition: 0.2s transform ease-out;
+            z-index: -1;
+        }
+
+        .navbar a:hover::after {
+            transform: translate(0, 0);
+        }
+
+        .navbar a:hover {
+            color: indigo;
+            border: 2px solid transparent;
+            transform: scale(1.05);
+        }
+
+        .logo {
+            float: left;
+            padding: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.4s ease;
+        }
+
+        .logo img:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        /* Main About Section */
+        .about {
+            max-width: 1000px;
+            margin: 80px auto; /* Increased margin-top to account for navbar */
+            text-align: center;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .about h1 {
+            font-size: 2.5em;
+            color: #e67e22;
+            margin-bottom: 20px;
+        }
+
+        .about p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .about-mission {
+            font-size: 1.4em;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .about img {
+            width: 100%;
+            height: auto;
+            max-width: 600px;
+            margin: 30px auto;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .about-mission strong {
+            color: #e67e22;
+        }
+
+        /* Team Section */
+        .team {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .team h2 {
+            font-size: 2em;
+            color: #e67e22;
+            margin-bottom: 20px;
+        }
+
+        .team-cards {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .team-card {
+            background-color: #fff;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .team-card h3 {
+            margin: 15px;
+            font-size: 1.5em;
+            color: #e67e22;
+        }
+
+        .team-card p {
+            font-size: 1em;
+            color: #555;
+            margin: 0 15px 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .team-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .team-card {
+                width: 80%;
+            }
+        }
+    </style>
+    <script>
+        window.onscroll = function() {
+            var navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+    </script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="{% static 'youcook.png' %}" alt="YouCook Logo">
+        </div>
+        <a href="{% url 'home' %}">Home</a>
+
+        <!-- Logout Form -->
+        <form method="POST" action="{% url 'logout' %}" class="logout-form" style="display: inline;">
+            {% csrf_token %}
+        </form>
+    </div>
+
+    <!-- About Us Section -->
+    <section class="about">
+        <h1>About YouCook</h1>
+        <p>
+            Welcome to YouCook, an innovative online platform designed for culinary creativity and exploration.
+            We provide a unique space where professional and aspiring chefs can share their original recipes with a global audience.
+            Our mission is to bring world-class culinary knowledge into everyone's kitchen.
+        </p>
+        <img src="{% static 'youcook.png' %}" alt="YouCook Platform Image">
+        <p class="about-mission">
+            <strong>Our Mission:</strong> At YouCook, we believe that great cooking should be accessible to all.
+            Whether you're a home cook looking to enhance your skills or a professional chef seeking to share your expertise,
+            we strive to create a community where culinary enthusiasts can connect, learn, and grow.
+            Join us in making the world a more delicious place!
+        </p>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <h2>Meet Our Team</h2>
+        <div class="team-cards">
+            <!-- Team Member 1 -->
+            <div class="team-card">
+                <img src="{% static 'maniex.jpg' %}" alt="Chef John">
+                <h3>Mani</h3>
+            </div>
+            <!-- Team Member 2 -->
+            <div class="team-card">
+                <img src="{% static 'sivaex.jpg' %}" alt="Chef Emily">
+                <h3>Sivaram</h3>
+            </div>
+            <!-- More team members can be added here -->
+        </div>
+    </section>
+
+</body>
+</html>

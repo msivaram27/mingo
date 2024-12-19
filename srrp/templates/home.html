@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | YouCook</title>
+    <style>
+        /* General reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Page styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url("{% static 'homebgimageex.jpg' %}"); /* Updated with path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #FF8C00; /* Solid thick orange */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        /* Navbar background change when scrolled */
+        .navbar.scrolled {
+            background-color: #FF7F00; /* Slightly darker orange when scrolled */
+            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Hover effect for the navbar buttons */
+        .navbar a::after {
+            background-color: yellow;
+            border-radius: 3rem;
+            content: '';
+            display: block;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-100%, 0) rotate(10deg);
+            transform-origin: top left;
+            transition: 0.2s transform ease-out;
+            z-index: -1;
+        }
+
+        .navbar a:hover::after {
+            transform: translate(0, 0);
+        }
+
+        .navbar a:hover {
+            color: indigo;
+            border: 2px solid transparent;
+            transform: scale(1.05);
+        }
+
+        .logo {
+            float: left;
+            padding: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.4s ease;
+        }
+
+        .logo img:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .content {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Introduction section with blurred background */
+        .introduction {
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* Blur effect */
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .introduction h2 {
+            font-size: 32px;
+            color: #111;
+            margin-bottom: 20px;
+        }
+
+        .introduction p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .introduction .highlight {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .introduction .explore-button {
+            background-color: #6a00f4;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .introduction .explore-button:hover {
+            background-color: #5700d4;
+        }
+
+        /* Logout Form */
+        .logout-form {
+            float: right;
+        }
+
+        .logout-form button {
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .logout-form button::after {
+            background-color: yellow;
+            border-radius: 3rem;
+            content: '';
+            display: block;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-100%, 0) rotate(10deg);
+            transform-origin: top left;
+            transition: 0.2s transform ease-out;
+            z-index: -1;
+        }
+
+        .logout-form button:hover::after {
+            transform: translate(0, 0);
+        }
+
+        .logout-form button:hover {
+            color: indigo;
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        window.onscroll = function() {
+            var navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="{% static 'youcook.png' %}" alt="YouCook Logo">
+        </div>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'add_recipe' %}">Add Recipe</a>
+        <a href="{% url 'recipe_list' %}">Recipe List</a>
+
+        <!-- Logout Form -->
+        <form method="POST" action="{% url 'logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div class="content">
+        <div class="introduction">
+            <h2>Welcome to <span class="highlight">YouCook</span>!</h2>
+            <p>Discover a world of delicious recipes at your fingertips! <strong>YouCook</strong> is your personal assistant in the kitchen, helping you find the perfect recipes based on your preferences, dietary needs, and ingredients you have at home. Whether you're a professional chef or just starting out, we've got something for everyone.</p>
+            <p>Our platform allows you to <span class="highlight">share your own recipes</span> and get feedback from other food enthusiasts. Explore new cuisines, master the basics, and elevate your cooking game with YouCook!</p>
+            <a class="explore-button" href="{% url 'recipe_list' %}">Explore Recipes</a>
+        </div>
+        <h1>Welcome to Our Website</h1>
+    </div>
+</body>
+</html>
